@@ -1,0 +1,46 @@
+Table,Column,Type,Description
+cdph_demographic_rate_cumulative,County,categorical,Specifies county or state
+cdph_demographic_rate_cumulative,Demographic_Set,categorical,"Specifies demographic category: age, gender, race_ethnicity, combined"
+cdph_demographic_rate_cumulative,Demographic_Set_Category,categorical,"Sub-category of specified demographic category
+Example for race_ethnicity: African American, American Indian, Asian American, Latino, Multi-Race, White, Other, Unknown, etc. "
+cdph_demographic_rate_cumulative,Metric,categorical,"Specifies if related counts are for cases, deaths, or tests"
+cdph_demographic_rate_cumulative,Metric_Value,numeric,"Number of records in the previous 30 days (cases based on episode date, deaths based on date of death, and tests based on specimen collection) for the specified metric; suppression is applied based on county population or total counts"
+cdph_demographic_rate_cumulative,Metric_Value_Per_100K,numeric,"30-day case, death, or testing rate per 100,000 population"
+cdph_demographic_rate_cumulative,Applied_Suppression,categorical,"Reason for suppression: Population, PopMinusTot, Total, None"
+cdph_demographic_rate_cumulative,Population_Percentage,numeric,Percent of county/state population in specified demographic category
+cdph_demographic_rate_cumulative,Metric_Total_Percentage,numeric,"Percent of county/state case, death, or test total that demographic category accounts for previous 30 days"
+cdph_demographic_rate_cumulative,Metric_Value_30_Days_Ago,numeric,"Number of records in the previous 31-60 days (cases based on episode date, deaths based on date of death, and tests based on specimen collection) for the specified metric; suppression is applied based on county population or total counts"
+cdph_demographic_rate_cumulative,Metric_Value_Per_100K_30_Days_Ago,numeric,"30-day case, death, or testing rate for previous 31-60 days per 100,000 population; equivalent to total/pop * 100000"
+cdph_demographic_rate_cumulative,Metric_Value_Per_100K_Delta_From_30_Days_Ago,numeric,Difference between most recent 30-day rate and the previous 30 day rate
+cdph_demographic_rate_cumulative,Metric_Total_Percentage_30_Days_Ago,numeric,"Percent of county/state case, death, or test total that demographic category accounts for in the previous 31-60 day period"
+cdph_demographic_rate_cumulative,Metric_Value_Percentage_Delta_From_30_Days_Ago,numeric,"Difference in percent of county/state case, death, or test total that demographic category accounts for in previous 30 days versus previous 31-60 day period"
+,,,
+covid19healthequitymetric,County,categorical,Specifies county or state
+covid19healthequitymetric,Date,date,Date; includes 30 previous dates after 9 day lag (2 day data processing delay + 7 day to account for reporting delay)
+covid19healthequitymetric,Metric,categorical,"Specifies metric: county_positivity_all_nopris,  county_positivity_low_hpi"
+covid19healthequitymetric,Metric_Value,numeric,"Value associated with the metric specified in ""name"" column. county_positivity_all_nopris: calculated as the total number of positive polymerase chain reaction (PCR) tests for COVID-19 over a 7-day period (based on specimen collected date) divided by the total number of PCR tests conducted, excluding tests for persons out of state or with unknown county of residence and tests associated with prison, ICE, US Marshal, or Department of State Hospitals facilities.  This number is then multiplied by 100 to get a percentage.  Each date represents the positivity of the previous 7 day period. county_positivity_low_hpi: Test positivity over a 7-day period (based on specimen collected date) for the tracts in HPI quartile 1 in a given county, excluding tests associated with prison, ICE, US Marshal, or Department of State Hospitals facilities. The California Healthy Places Index (HPI) is a composite measure of socioeconomic opportunity applied to census tracts that includes 25 individual indicators across economic, social, education, transportation, housing, environmental and neighborhood sectors. Race/ethnicity are not variables included in the calculation of the HPI. However, given historic and persistent systemic factors – such as housing discrimination, disparities in school funding, and paucity of employment opportunities – have led to disinvestment and high rates of poverty for communities of color, it should not be surprising that a disproportionate percentage of Latino and African-American Californians live in HPI quartile 1."
+covid19healthequitymetric,Metric_Value_30_Days_Ago,numeric,Metric value for the date 30 days prior to the specified date
+covid19healthequitymetric,Metric_Value_Diff,numeric,Difference between specified date's calculation and 30 days prior
+,,,
+covid19demographicdatacompleteness,County,categorical,Specifies county or state
+covid19demographicdatacompleteness,Sogi_Category,categorical,"Specifies which SOGI fields are being assessed (gender_identity, race_ethnicity, or sexual_orientation)"
+covid19demographicdatacompleteness,Metric,categorical,"Specifies if related counts are for cases, deaths, or tests"
+covid19demographicdatacompleteness,Missing,numeric,"Number of records with date (cases based on episode date, deaths based on date of death, and tests based on specimen collection) in the previous 30 days that have unknown or missing information for specified category"
+covid19demographicdatacompleteness,Not_Missing,numeric,"Number of records with date (cases based on episode date, deaths based on date of death, and tests based on specimen collection) in the previous 30 days that are not missing information for specified category"
+covid19demographicdatacompleteness,Total,numeric,"Total number of records with date (cases based on episode date, deaths based on date of death, and tests based on specimen collection) in the previous 30 days; equivalent to Missing + Not_Missing"
+covid19demographicdatacompleteness,Percent_Complete,numeric,Percent of records in the previous 30 days that are not missing information; equivalent to Not_Missing/Total*100
+covid19demographicdatacompleteness,Percent_Complete_30_Days_Prior,numeric,Percent of records in the previous 31-60 days that are not missing information
+covid19demographicdatacompleteness,Percent_Complete_30_Days_Diff,numeric,Difference in completeness between records from the previous 30 days versus previous 31-60 days; equivalent to Perc_Complete - Perc_Complete_30_Prior
+covid19demographicdatacompleteness,Report_Date,,Date on which the data was calculated
+,,,
+covid19riskfactors,Date,date,Date on which the data was calculated
+covid19riskfactors,Social_Det,categorical,"Specifies SDOH variable: income, income_cumulative, crowding, insurance"
+covid19riskfactors,Social_Tier,categorical,"Specifies sub-category of Social_Det category
+Example for SDOH variable = income: above $120K, $80-100K, $60-80K, $40-60K, etc."
+covid19riskfactors,Sort,numeric,Numeric rank for social tier
+covid19riskfactors,Cases_7dayavg_7daysago,numeric,Average number of cases per day for previous 7 days (except for income_cumulative which represents whole pandemic)
+covid19riskfactors,Population,numeric,Total population using 2017 population data
+covid19riskfactors,Case_Rate_Per_100K,numeric,"Case rate per 100,000 population"
+covid19riskfactors,State_Case_Rate_Per_100K,numeric,"State case rate per 100,000 population"
+covid19riskfactors,Case_Rate_Per_100K_30_Days_Ago,numeric,Case rate for the date 30 days prior
+covid19riskfactors,Rate_Diff_30_Days,numeric,Difference between current case rate and 30 days prior
