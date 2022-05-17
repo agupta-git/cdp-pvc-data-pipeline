@@ -6,10 +6,8 @@ I want to use health equity data reported by California Department of Public Hea
 ## Design
 **Collect** - Ingest data from https://data.chhs.ca.gov/dataset/covid-19-equity-metrics using NiFi.  
 **Enrich** - Transform the dataset using Spark and load Hive tables.  
-**Report** - Gather insights using Hive tables and Data Visualization.  
-**Predict** - Connect to Hive tables and build Machine Learning (ML) models of your choice.
-
-![Design - CDP Data Pipeline](/assets/Design_CDP_Data_Pipeline.png)
+**Report** - Gather insights using Hive tables and Data Visualization (TBD).  
+**Predict** - Connect to Hive tables and build Machine Learning (ML) models of your choice. TBD
 
 ## Implementation
 **Prerequisites:**  
@@ -26,7 +24,7 @@ I want to use health equity data reported by California Department of Public Hea
 - Execute the flow and ensure InvokeHTTP processors are able to get [covid19case_rate_by_social_det.csv](https://data.chhs.ca.gov/dataset/f88f9d7f-635d-4334-9dac-4ce773afe4e5/resource/11fa525e-1c7b-4cf5-99e1-d4141ea590e4/download/covid19case_rate_by_social_det.csv) and [covid19demographicratecumulative.csv](https://data.chhs.ca.gov/dataset/f88f9d7f-635d-4334-9dac-4ce773afe4e5/resource/b500dae2-9e58-428e-b125-82c7e9b07abb/download/covid19demographicratecumulative.csv). Verify that these files are added to your storage directory.
 - For reference, here's a picture of the flow in NiFi user interface -
 
-  ![NiFi Flow](https://user-images.githubusercontent.com/2523891/160719482-1245dff8-7593-4b5b-890e-a74f25ba2332.png)
+  ![NiFi Flow](https://user-images.githubusercontent.com/2523891/168928614-87e9ba25-47a7-4aa6-861f-8f45ff698f6a.png)
 ---
 ### Step #2 - Setup PySpark Job
 - SSH in to the cluster and make enrich.py program available in any directory. **Please change the _fs_ variable in enrich.py program to point to your HDFS directory**.
