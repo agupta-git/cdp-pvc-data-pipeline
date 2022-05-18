@@ -28,7 +28,7 @@ I want to use health equity data reported by California Department of Public Hea
 ---
 ### Step #2 - Setup PySpark Job
 - SSH in to the cluster and make enrich.py program available in any directory. **Please change the _fs_ variable in enrich.py program to point to your HDFS directory**.
-- Execute the following command - ```/bin/spark-submit enrich_pvc.py``` and monitor logs to ensure it's finished successfully. It takes approx. 4 minutes to finish.
+- Execute the following command - ```/bin/spark-submit enrich.py``` and monitor logs to ensure it's finished successfully. It takes approx. 4 minutes to finish.
 - Following Hive tables are created by this job:
   - cdph.data_dictionary
   - cdph.covid_rate_by_soc_det
