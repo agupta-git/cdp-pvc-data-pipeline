@@ -1,4 +1,3 @@
-# _WORK IN PROGRESS_
 # A Data Pipeline in Cloudera Data Platform (CDP)
 ## Use Case - Accelerate COVID-19 outreach programs using CDP Private Cloud environment
 As a healthcare provider / public health official, I want to respond equitably to the COVID-19 pandemic as quickly as possible, and serve all the communities that are adversely impacted in the state of California.  
@@ -6,15 +5,16 @@ I want to use health equity data reported by California Department of Public Hea
 ## Design
 **Collect** - Ingest data from https://data.chhs.ca.gov/dataset/covid-19-equity-metrics using NiFi.  
 **Enrich** - Transform the dataset using Spark and load Hive tables.  
-**Report** - Gather insights using Hive tables and Data Visualization (TBD).  
-**Predict** - Connect to Hive tables and build Machine Learning (ML) models of your choice. TBD
+**Report** - Gather insights using Hue Editor. 
+
+![Design - CDP Data Pipeline](/assets/Design_CDP_Data_Pipeline.png)
 
 ## Implementation
 **Prerequisites:**  
 - A modern browser such as Google Chrome and Firefox.
-- An existing CDP Private Cloud environment with following services - Hadoop Distributed File System (HDFS), Atlas, NiFi, Spark, Hive on Tez, Hue, HBase, TBD 
+- An existing CDP Private Cloud environment with following services - Hadoop Distributed File System (HDFS), Atlas, NiFi, Spark, Hive on Tez, Hue, HBase
+- Add data/covid-19-equity-metrics-data-dictionary.csv to your storage directory.
 - Add data/member_profile.csv to your storage directory.
-- Add data/covid-19-equity-metrics-data-dictionary.csv to your storage directory. 
 
 **Steps to create this data pipeline, are as follows:**  
 > Please note that this data pipeline's documentation is in accordance with CDP Runtime Version 7.1.7. 
@@ -46,14 +46,60 @@ I want to use health equity data reported by California Department of Public Hea
   select * from cdph.covid_demo_rate_cumulative a;
   select * from member.member_profile a;
   ```
-- TBD - either provide analysis queries or point to CDSW Data Viz
-- Based on this dataset, **below $40K** is the most impacted income group in terms of COVID-19 cases, and **65+** is the most impacted age group in terms of COVID-19 related deaths. You can now use this information, to filter members that are in these categories.
-- Execute the following queries to get impacted members:
+- Let's analyze this data to identify income-groups that are most impacted by COVID-19
+  ```sql
+  select 
+    a.social_det, 
+    a.social_tier,
+    a.priority_sort,
+    avg(a.case_rate_per_100k) as avg_rate
+  from cdph.covid_rate_by_soc_det a
+  where a.social_det = 'income'
+  group by a.social_det, a.social_tier, a.priority_sort
+  order by a.priority_sort;
+  ```
+  | a.social_det | a.social_tier | a.priority_sort | avg_rate |
+  | --- | --- | --- | --- |
+  | income | above $120K | 0.0 | 10.7511364396 |
+  | income | $100k - $120k | 1.0 | 14.9906347703 |
+  | income | $80k - $100k | 2.0 | 17.6407007434 |
+  | income | $60k - $80k | 3.0 | 21.9569391068 |
+  | income | $40k - $60k | 4.0 | 25.964262668 |
+  | income | below $40K | 5.0 | 28.9420371609 |
+- Let's do one more exercise and identify age-groups that are most impacted by COVID-19 in last 30 days.  
+  This query uses metric_value_per_100k_delta_from_30_days_ago column which is the difference between most recent 30-day rate and the previous 30-day rate.
+  ```sql
+  select 
+    a.demographic_set,
+    a.demographic_set_category,
+    a.metric,
+    avg(a.metric_value_per_100k_delta_from_30_days_ago) as avg_rate
+  from cdph.covid_demo_rate_cumulative a
+  where 
+  demographic_set in ('age_gp4')
+  and metric in ('cases')
+  and a.demographic_set_category is not null
+  group by a.demographic_set, a.demographic_set_category, a.metric
+  order by avg_rate desc;
+  ```
+  | a.demographic_set | a.demographic_set_category | a.metric | avg_rate |
+  | --- | --- | --- | --- |
+  | age_gp4 | 18-49 | cases | 211.566164197452 |
+  | age_gp4 | 50-64 | cases | 159.875170602457 |
+  | age_gp4 | 0-17 | cases | 112.383263616547 |
+  | age_gp4 | 65+ | cases | 96.0969276083687 |
+
+- Based on above results, **below $40K** is the most impacted income-group in terms of COVID-19 cases, and **18-49** is the most impacted age-group in terms of COVID-19 cases in last 30 days. You can now use this information, to filter members that are in these categories.
+  Execute the following queries to get impacted members:
   ```sql
   select * from member.target_mbrs_by_income a where social_tier = 'below $40K';
-  select * from member.target_mbrs_by_age_group a where demographic_set_category = '65+';
+  select * from member.target_mbrs_by_age_group a where demographic_set_category = '18-49';
   ```
 ---
-### Step #7 - View Hive tables in TBD
-- Go to Data Catalog user interface. Select any Hive table created in this exercise and see its lineage, schema, audits, etc.
+### Step #4 - View Hive tables in Atlas
+- Go to Atlas user interface, select any Hive table created in this exercise and see its lineage, schema, audits, etc.
+- Here's a snapshot of covid_rate_by_soc_det table in Atlas.
+
+  ![Hive table in Atlas](https://user-images.githubusercontent.com/2523891/169167745-3fdf189c-a148-4b89-b531-c64d42f9a784.png)
+
 ---
